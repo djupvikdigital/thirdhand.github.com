@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Rich form controls demo</title>
+		<link rel="Stylesheet" type="text/css" href="richform.css">
+		<script type="text/javascript" src="jquery-1.4.4.js"></script>
+		<script type="text/javascript" src="richform.js"></script>
+	</head>
+	<body>
+		<div>
+			<span class="menubar">
+				<label class="showmenu">Vertikal posisjon
+					<select name="vert-menu" class="menu jshidden" size="4">
+						<option value="-1">Grunnplan</option>
+						<option value="-2">Sokkel</option>
+						<option value="-3">Kjeller</option>
+						<option value="1" class="menurich">Annet (velg etasje)</option>
+					</select>
+				</label>
+				<span class="menubox jshidden">
+					<span class="menutext"></span>
+					<span class="menurich jshidden">
+						<label>Etasje: <input name="door-vert" class="valstore" size="2"></label>
+					</span>
+					<input type="button" class="removeval" value="&lt;">
+				</span>
+			</span>
+		</div>
+	</body>
+</html>

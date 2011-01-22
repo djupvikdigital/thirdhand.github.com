@@ -1,0 +1,16 @@
+.menubar {
+	display: inline-block;
+	position: relative;
+	padding: 2px;
+	border: 1px solid black;
+	font-family: sans;
+	font-size: 10pt;
+}
+.menu {
+	display: block;
+	position: absolute;
+	z-index: 1;
+}
+.jshidden {
+	display: none;
+}
