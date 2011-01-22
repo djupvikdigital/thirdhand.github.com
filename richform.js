@@ -8,6 +8,9 @@
 		var valstore = menubox.find(".valstore");
 		valstore = valstore.size() ? valstore : null;
 		return {
+			menu : menu,
+			valstore : valstore,
+			removeval : menubox.find(".removeval"),
 			name : (valstore ? valstore.attr("name") : menu.attr("name")),
 			getVal : function() {
 				var val;
@@ -78,29 +81,32 @@
 		}
 	}
 	$(function() {
-		$(".menubar").click(function(e) {
-			var target = $(e.target);
-			if(!(target.is(".showmenu") || target.is(".menutext") || target.is(".menubar"))) {
-				return;
-			}
-			var self = $(this);
-			var visible = Menubar(self).showMenu();
-			if(!visible && target.is(".showmenu"))
-			{
-				e.preventDefault();
-			}
-		});
-		$(".menu").change(function(e) {
-			var self = $(this);
-			Menubar(self.closest(".menubar")).updateValstore(); // closest == closest parent
-			self.toggleClass("jshidden");
-		});
-		$(".valstore").change(function(e) {
-			Menubar($(this).closest(".menubar")).updateMenu(); // closest == closest parent
-		});
-		$(".removeval").click(function(e) {
-			var menubar = Menubar($(this).parents(".menubar"))
-			menubar.removeVal();
+		var menubars = [];
+		$(".menubar").each(function(i, el) {
+			el = $(el); // jQuerify
+			var menubar = Menubar(el);
+			menubars.push(menubar);
+			el.click(function(e) {
+				var target = $(e.target);
+				if(!(target.is(".showmenu") || target.is(".menutext") || target.is(".menubar"))) {
+					return;
+				}
+				var visible = menubar.showMenu();
+				if(!visible && target.is(".showmenu"))
+				{
+					e.preventDefault();
+				}
+			});
+			menubar.menu.change(function() {
+				menubar.updateValstore();
+				$(this).toggleClass("jshidden");
+			});
+			menubar.valstore.change(function() {
+				menubar.updateMenu();
+			});
+			menubar.removeval.click(function() {
+				menubar.removeVal();
+			});
 		});
 	});
 })(jQuery);
