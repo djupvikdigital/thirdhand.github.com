@@ -14,14 +14,14 @@
 	function RichSelect(el) {
 		// Object for rich menu functionality
 		var menubox = el.find(".menubox");
-		var menutext = menubox.prepend("<span />");
+		var menutext = menubox.prepend("<span />"); // Add empty element for holding option text
 		var richopt = menubox.find(".richopt");
 		var menu = el.find(".menu");
 		menu = menu.size() ? menu : null; // Check for existence of menu
 		hide([menubox, richopt, menu]);
 		var valstore = menubox.find(".valstore");
 		valstore = valstore.size() ? valstore : null; // Check for existence of valstore
-		// Public object properties and methods
+		// Public object properties and methods (pretty much everything by now)
 		return {
 			menu : menu,
 			menubox: menubox,
@@ -45,6 +45,7 @@
 					richopt.removeClass("jshidden");
 					menubox.removeClass("jshidden");
 					var inputs = richopt.find("input");
+					// Select form element for added usability
 					if(inputs.size()) {
 						inputs.first().select();
 					}
@@ -100,13 +101,16 @@
 		}
 	}
 	$(function() {
+		// init function
 		// Add js styles
 		$("head").append($("<link />", {
 			rel : "Stylesheet",
 			type : "text/css",
 			href : "js.css"
 		}));
+		// Array holding all rich menus (currently not used, maybe convenient later - or not)
 		var selects = [];
+		// Instantiate objects and add event handlers (possibly event handlers should be added inside RichSelect?)
 		$(".richselect").each(function(i, el) {
 			el = $(el); // jQuerify
 			var select = RichSelect(el);
