@@ -1,9 +1,9 @@
 (function($) {
-	function Menubar(menubar) {
-		var menubox = menubar.find(".menubox");
+	function RichSelect(el) {
+		var menubox = el.find(".menubox");
 		var menutext = menubox.children(".menutext");
-		var menurich = menubox.find(".menurich");
-		var menu = menubar.find(".menu");
+		var richopt = menubox.find(".richopt");
+		var menu = el.find(".menu");
 		menu = menu.size() ? menu : null;
 		var valstore = menubox.find(".valstore");
 		valstore = valstore.size() ? valstore : null;
@@ -25,17 +25,17 @@
 			},
 			updateMenubox : function(option) {
 				option = option || menu.children("option:selected");
-				if(option.hasClass("menurich")) {
+				if(option.hasClass("richopt")) {
 					menutext.text(": ");
-					menurich.removeClass("jshidden");
+					richopt.removeClass("jshidden");
 					menubox.removeClass("jshidden");
-					var inputs = menurich.find("input");
+					var inputs = richopt.find("input");
 					if(inputs.size()) {
 						inputs.first().select();
 					}
 				}
 				else {
-					if(!menurich.hasClass("jshidden")) menurich.addClass("jshidden");
+					if(!richopt.hasClass("jshidden")) richopt.addClass("jshidden");
 					menutext.text(": " + option.text());
 					menubox.removeClass("jshidden");
 				}
@@ -81,31 +81,31 @@
 		}
 	}
 	$(function() {
-		var menubars = [];
-		$(".menubar").each(function(i, el) {
+		var selects = [];
+		$(".richselect").each(function(i, el) {
 			el = $(el); // jQuerify
-			var menubar = Menubar(el);
-			menubars.push(menubar);
+			var select = RichSelect(el);
+			selects.push(select);
 			el.click(function(e) {
 				var target = $(e.target);
-				if(!(target.is(".showmenu") || target.is(".menutext") || target.is(".menubar"))) {
+				if(!(target.is(".showmenu") || target.is(".menutext") || target.is(".richselect"))) {
 					return;
 				}
-				var visible = menubar.showMenu();
+				var visible = select.showMenu();
 				if(!visible && target.is(".showmenu"))
 				{
 					e.preventDefault();
 				}
 			});
-			menubar.menu.change(function() {
-				menubar.updateValstore();
+			select.menu.change(function() {
+				select.updateValstore();
 				$(this).toggleClass("jshidden");
 			});
-			menubar.valstore.change(function() {
-				menubar.updateMenu();
+			select.valstore.change(function() {
+				select.updateMenu();
 			});
-			menubar.removeval.click(function() {
-				menubar.removeVal();
+			select.removeval.click(function() {
+				select.removeVal();
 			});
 		});
 	});
