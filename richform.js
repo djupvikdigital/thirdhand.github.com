@@ -98,6 +98,9 @@
 		$(".valstore").change(function(e) {
 			Menubar($(this).closest(".menubar")).updateMenu(); // closest == closest parent
 		});
+		$(".removeval").click(function(e) {
+			var menubar = Menubar($(this).parents(".menubar"))
+			menubar.removeVal();
+		});
 	});
-	
 })(jQuery);
