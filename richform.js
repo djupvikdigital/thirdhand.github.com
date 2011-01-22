@@ -1,15 +1,20 @@
 (function($) {
-	function hide(els) {
-		// Hide elements that are to be shown on events
-		// els is array
-		if(typeof els === "object" && els instanceof Array) {
-			for(var i = 0; i < els.length; i++) {
-				if(els[i] && els[i].addClass) els[i].addClass("jshidden");
+	function changeMultiple(method, arg) {
+		// Apply the same method and arg to multiple objects
+		return function() {
+			var args = arguments;
+			if(!args.length) return false; // no args
+			for(var i = 0; i < args.length; i++) {
+				if(args[i] && args[i][method]) args[i][method](arg);
 			}
+			return true;
 		}
-		else if(els && els.addClass) els.addClass("jshidden"); // els is single element
-		else return false; // fail
-		return true;
+	}
+	var show = changeMultiple("removeClass", "jshidden");
+	var hide = changeMultiple("addClass", "jshidden");
+	var toggle = changeMultiple("toggleClass", "jshidden");
+	function visible(el) {
+		return !el.hasClass("jshidden");
 	}
 	function RichSelect(el) {
 		// Object for rich menu functionality
@@ -46,7 +51,7 @@
 		var richopt = menubox.find(".richopt");
 		var menu = el.find(".menu");
 		menu = menu.size() ? menu : null; // Check for existence of menu
-		hide([menubox, richopt, menu]);
+		hide(menubox, richopt, menu);
 		var valstore = menubox.find(".valstore");
 		valstore = valstore.size() ? valstore : null; // Check for existence of valstore
 		// Public object properties and methods (pretty much everything by now)
@@ -73,8 +78,7 @@
 				option = option || menu.children("option:selected");
 				if(option.hasClass("richopt")) {
 					menutext.text("");
-					richopt.removeClass("jshidden");
-					menubox.removeClass("jshidden");
+					show(richopt, menubox);
 					var inputs = richopt.find("input");
 					// Select form element for added usability
 					if(inputs.size()) {
@@ -82,9 +86,9 @@
 					}
 				}
 				else {
-					if(!richopt.hasClass("jshidden")) richopt.addClass("jshidden");
+					if(!richopt.hasClass("jshidden")) show(richopt);
 					menutext.text(option.text());
-					menubox.removeClass("jshidden");
+					show(menubox);
 				}
 			},
 			updateMenu : function() {
@@ -119,7 +123,7 @@
 			removeVal : function() {
 				// Remove value and collapse menu button to initial form
 				showmenu.removeColon();
-				menubox.addClass("jshidden");
+				hide(menubox);
 				menutext.text("");
 				if(valstore) valstore.val("");
 				if(menu) menu.get(0).selectedIndex = -1;
@@ -127,8 +131,8 @@
 			showMenu : function() {
 				// Show or hide menu
 				var el = menu ? menu : menubox;
-				el.toggleClass("jshidden");
-				return !el.hasClass("jshidden");
+				toggle(el);
+				return visible(el);
 			}
 		}
 	}
@@ -163,7 +167,7 @@
 			// Event handlers keep menu and valstore in sync
 			select.menu.change(function() {
 				select.updateValstore();
-				$(this).toggleClass("jshidden");
+				toggle($(this));
 			});
 			select.valstore.change(function() {
 				select.updateMenu();
