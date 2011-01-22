@@ -13,8 +13,36 @@
 	}
 	function RichSelect(el) {
 		// Object for rich menu functionality
+		var showmenu = (function() {
+			// Object for manipulating showmenu
+			var label = el.find(".showmenu");
+			var labeltext;
+			function init() {
+				labeltext = label.html();
+				labeltext = labeltext.slice(0, labeltext.indexOf("<")); // Select text until first HTML element
+			}
+			return {
+				addColon : function() {
+					// Show colon in label when expanded
+					init();
+					if(labeltext.indexOf(":") == -1) {
+						label.contents().first().remove(); // Remove text node
+						label.prepend(labeltext.trim() + ":");
+					}
+				},
+				removeColon : function() {
+					// Remove colon in label when collapsed
+					init();
+					label.contents().first().remove(); // Remove text node
+					label.prepend(labeltext.replace(":", "")); // Add same text without colon
+				}
+			}
+		})();
+		showmenu.removeColon();
 		var menubox = el.find(".menubox");
-		var menutext = menubox.prepend("<span />"); // Add empty element for holding option text
+		// Add empty element for holding option text
+		menubox.prepend("<span />");
+		var menutext = menubox.children().first();
 		var richopt = menubox.find(".richopt");
 		var menu = el.find(".menu");
 		menu = menu.size() ? menu : null; // Check for existence of menu
@@ -24,7 +52,8 @@
 		// Public object properties and methods (pretty much everything by now)
 		return {
 			menu : menu,
-			menubox: menubox,
+			menubox : menubox,
+			menutext : menutext,
 			valstore : valstore,
 			name : (valstore ? valstore.attr("name") : menu.attr("name")),
 			getVal : function() {
@@ -40,8 +69,10 @@
 			},
 			updateMenubox : function(option) {
 				// Shows selected option. If option is a richopt show that element.
+				showmenu.addColon();
 				option = option || menu.children("option:selected");
 				if(option.hasClass("richopt")) {
+					menutext.text("");
 					richopt.removeClass("jshidden");
 					menubox.removeClass("jshidden");
 					var inputs = richopt.find("input");
@@ -87,6 +118,7 @@
 			},
 			removeVal : function() {
 				// Remove value and collapse menu button to initial form
+				showmenu.removeColon();
 				menubox.addClass("jshidden");
 				menutext.text("");
 				if(valstore) valstore.val("");
@@ -118,7 +150,7 @@
 			// Event handler for menu button
 			el.click(function(e) {
 				var target = $(e.target);
-				if(!(target.is(".showmenu") || target.is(".menutext") || target.is(".richselect"))) {
+				if(!(target.is(".showmenu") || target.is(".menubox") || target.is(".richselect"))) {
 					return;
 				}
 				var visible = select.showMenu();
@@ -139,7 +171,7 @@
 			// Add remove button
 			select.menubox.append($("<input />", {
 				type : "button",
-				value : "&lt;",
+				value : "<",
 				click : function() {
 					select.removeVal();
 				}
