@@ -6,11 +6,3 @@
 	font-family: sans;
 	font-size: 10pt;
 }
-.menu {
-	display: block;
-	position: absolute;
-	z-index: 1;
-}
-.jshidden {
-	display: none;
-}
