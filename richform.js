@@ -144,6 +144,8 @@
 			type : "text/css",
 			href : "js.css"
 		}));
+		// Reset form
+		$("form").get(0).reset();
 		// Array holding all rich menus (currently not used, maybe convenient later - or not)
 		var selects = [];
 		// Instantiate objects and add event handlers (possibly event handlers should be added inside RichSelect?)
@@ -157,7 +159,6 @@
 				if(target.is("label") || target.is("input")) {
 					return;
 				}
-				select.menu.get().selectedIndex = -1;
 				var visible = select.showMenu();
 				if(!visible && target.is(".showmenu")) {
 					e.preventDefault();
