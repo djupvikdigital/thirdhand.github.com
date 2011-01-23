@@ -86,7 +86,7 @@
 					}
 				}
 				else {
-					if(!richopt.hasClass("jshidden")) show(richopt);
+					if(!richopt.hasClass("jshidden")) hide(richopt);
 					menutext.text(option.text());
 					show(menubox);
 				}
@@ -154,9 +154,10 @@
 			// Event handler for menu button
 			el.click(function(e) {
 				var target = $(e.target);
-				if(!(target.is(".showmenu") || target.is(".menubox") || target.is(".richselect"))) {
+				if(target.is("label") || target.is("input")) {
 					return;
 				}
+				select.menu.get().selectedIndex = -1;
 				var visible = select.showMenu();
 				if(!visible && target.is(".showmenu")) {
 					e.preventDefault();
@@ -165,9 +166,10 @@
 			// Make into multiline select
 			select.menu.attr("size", select.menu.children().size());
 			// Event handlers keep menu and valstore in sync
-			select.menu.change(function() {
+			select.menu.children().click(function(e) {
 				select.updateValstore();
-				toggle($(this));
+				toggle($(this).parent());
+				e.stopPropagation();
 			});
 			select.valstore.change(function() {
 				select.updateMenu();
