@@ -176,12 +176,17 @@
 				select.updateMenu();
 			});
 			// Add remove button
-			select.menubox.append($("<input />", {
-				type : "button",
-				value : "<",
+			select.menubox.append($("<img />", {
+				src : "remove.png",
+				alt : "remove",
 				click : function() {
 					select.removeVal();
 				}
+			}));
+			// Add dropdown image
+			el.append($("<img />", {
+				src : "dropdown.png",
+				alt : "dropdown"
 			}));
 		});
 	});
