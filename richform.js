@@ -156,7 +156,7 @@
 			// Event handler for menu button
 			el.click(function(e) {
 				var target = $(e.target);
-				if(target.is("label") || target.is("input")) {
+				if(target.is("label") || target.is("input") || target.is(".removeval")) {
 					return;
 				}
 				var visible = select.showMenu();
@@ -179,6 +179,7 @@
 			select.menubox.append($("<img />", {
 				src : "remove.png",
 				alt : "remove",
+				class : "removeval",
 				click : function() {
 					select.removeVal();
 				}
