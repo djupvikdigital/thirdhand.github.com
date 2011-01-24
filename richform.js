@@ -139,11 +139,7 @@
 	$(function() {
 		// init function
 		// Add js styles
-		$("head").append($("<link />", {
-			rel : "Stylesheet",
-			type : "text/css",
-			href : "js.css"
-		}));
+		$("head").append('<link rel="Stylesheet" type="text/css" href="js.css" />');
 		// Reset form
 		$("form").get(0).reset();
 		// Array holding all rich menus (currently not used, maybe convenient later - or not)
