@@ -194,7 +194,7 @@
 				select.hideMenu();
 			});
 			// Prevent pressing enter in the menu from submitting the form
-			select.menu.keydown(function(e) {
+			select.menu.keyup(function(e) {
 				if(e.which == 13) e.preventDefault();
 			});
 			select.valstore.change(function() {
