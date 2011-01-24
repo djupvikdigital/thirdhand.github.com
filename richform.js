@@ -133,7 +133,9 @@
 				// Show or hide menu
 				var el = menu ? menu : menubox;
 				show(el);
-				if(menu) menu.focus();
+				if(menu) {
+					menu.focus();
+				}
 			},
 			hideMenu : function() {
 				var el = menu ? menu : menubox;
@@ -163,7 +165,7 @@
 			el = $(el); // jQuerify
 			var select = RichSelect(el);
 			selects.push(select);
-			// Event handler for menu button
+			// Event handlers for menu button
 			el.click(function(e) {
 				var target = $(e.target);
 				if(target.is(".menubox label") || target.is("input") || target.is(".removeval")) {
@@ -173,6 +175,10 @@
 					select.hideMenu();
 				else
 					select.showMenu();
+			});
+			el.jkey('space', function() {
+				movedown = false;
+				select.showMenu();
 			});
 			// Make into multiline select
 			select.menu.attr("size", select.menu.children().size());
@@ -184,12 +190,9 @@
 			select.menu.change(function(e) {
 				select.updateMenubox();
 			});
-			select.menu.keypress(function(e) {
-				// 13 == enter key
-				if(e.which == 13) {
-					select.updateValstore();
-					select.hideMenu();
-				}
+			select.menu.jkey('enter', function() {
+				select.updateValstore();
+				select.hideMenu();
 			});
 			select.valstore.change(function() {
 				select.updateMenu();
