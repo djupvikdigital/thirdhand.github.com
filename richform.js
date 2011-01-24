@@ -179,7 +179,7 @@
 			select.menubox.append($("<img />", {
 				src : "remove.png",
 				alt : "remove",
-				class : "removeval",
+				"class" : "removeval",
 				click : function() {
 					select.removeVal();
 				}
