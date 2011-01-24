@@ -26,23 +26,20 @@
 			});
 			var labeltext;
 			function init() {
-				labeltext = label.html();
-				labeltext = labeltext.slice(0, labeltext.indexOf("<")); // Select text until first HTML element
+				labeltext = label.contents().get(0).nodeValue;
 			}
 			return {
 				addColon : function() {
 					// Show colon in label when expanded
 					init();
 					if(labeltext.indexOf(":") == -1) {
-						label.contents().first().remove(); // Remove text node
-						label.prepend(labeltext.trim() + ":");
+						label.contents().get(0).nodeValue = labeltext.trim() + ":";
 					}
 				},
 				removeColon : function() {
 					// Remove colon in label when collapsed
 					init();
-					label.contents().first().remove(); // Remove text node
-					label.prepend(labeltext.replace(":", "")); // Add same text without colon
+					label.contents().get(0).nodeValue = labeltext.replace(":", "");
 				}
 			}
 		})();
