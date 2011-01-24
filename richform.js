@@ -177,7 +177,6 @@
 					select.showMenu();
 			});
 			el.jkey('space', function() {
-				movedown = false;
 				select.showMenu();
 			});
 			// Make into multiline select
