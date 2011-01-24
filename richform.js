@@ -187,7 +187,7 @@
 				// The richselect click handler hides the menu
 			});
 			select.menu.change(function(e) {
-				select.updateMenubox();
+				select.updateValstore();
 			});
 			select.menu.jkey('enter', function() {
 				select.updateValstore();
