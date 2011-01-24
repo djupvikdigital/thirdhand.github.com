@@ -21,6 +21,9 @@
 		var showmenu = (function() {
 			// Object for manipulating showmenu
 			var label = el.find(".showmenu");
+			label.click(function(e) {
+				e.preventDefault();
+			});
 			var labeltext;
 			function init() {
 				labeltext = label.html();
@@ -79,11 +82,6 @@
 				if(option.hasClass("richopt")) {
 					menutext.text("");
 					show(richopt, menubox);
-					var inputs = richopt.find("input");
-					// Select form element for added usability
-					if(inputs.size()) {
-						inputs.first().select();
-					}
 				}
 				else {
 					if(!richopt.hasClass("jshidden")) hide(richopt);
@@ -126,13 +124,25 @@
 				hide(menubox);
 				menutext.text("");
 				if(valstore) valstore.val("");
-				if(menu) menu.get(0).selectedIndex = -1;
+				if(menu) {
+					menu.get(0).selectedIndex = -1;
+					hide(menu);
+				}
 			},
 			showMenu : function() {
 				// Show or hide menu
 				var el = menu ? menu : menubox;
-				toggle(el);
-				return visible(el);
+				show(el);
+				if(menu) menu.focus();
+			},
+			hideMenu : function() {
+				var el = menu ? menu : menubox;
+				hide(el);
+				var inputs = richopt.find("input");
+				// Select form element for added usability
+				if(inputs.size()) {
+					inputs.first().select();
+				}
 			}
 		}
 	}
@@ -156,21 +166,30 @@
 			// Event handler for menu button
 			el.click(function(e) {
 				var target = $(e.target);
-				if(target.is("label") || target.is("input") || target.is(".removeval")) {
+				if(target.is(".menubox label") || target.is("input") || target.is(".removeval")) {
 					return;
 				}
-				var visible = select.showMenu();
-				if(!visible && target.is(".showmenu")) {
-					e.preventDefault();
-				}
+				if(visible(select.menu))
+					select.hideMenu();
+				else
+					select.showMenu();
 			});
 			// Make into multiline select
 			select.menu.attr("size", select.menu.children().size());
 			// Event handlers keep menu and valstore in sync
-			select.menu.children().click(function(e) {
+			select.menu.click(function(e) {
 				select.updateValstore();
-				toggle($(this).parent());
-				e.stopPropagation();
+				// The richselect click handler hides the menu
+			});
+			select.menu.change(function(e) {
+				select.updateMenubox();
+			});
+			select.menu.keypress(function(e) {
+				// 13 == enter key
+				if(e.which == 13) {
+					select.updateValstore();
+					select.hideMenu();
+				}
 			});
 			select.valstore.change(function() {
 				select.updateMenu();
