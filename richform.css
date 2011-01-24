@@ -2,8 +2,13 @@
 	display: inline-block;
 	position: relative;
 	padding: 2px;
-	-moz-border-image: url("file:///home/reidar/projects/richform/richselect.png") 25%;
+	-moz-border-image: url(richselect.png) 4;
+	-webkit-border-image: url(richselect.png) 4;
+	-o-border-image: url(richselect.png) 4;
+	border-image: url(richselect.png) 4;
 	font-family: sans;
 	font-size: 10pt;
+}
+.richselect img {
 	vertical-align: middle;
 }
