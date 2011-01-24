@@ -114,8 +114,8 @@
 				// Update valstore from selected menu option
 				var option = menu.children("option:selected");
 				if(option.size()) {
-					if(valstore) valstore.val(option.val());
 					this.updateMenubox(option);
+					if(valstore) valstore.val(option.val());
 				}
 			},
 			removeVal : function() {
