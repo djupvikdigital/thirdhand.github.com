@@ -193,6 +193,10 @@
 				select.updateValstore();
 				select.hideMenu();
 			});
+			// Prevent pressing enter in the menu from submitting the form
+			select.menu.keypress(function(e) {
+				if(e.which == 13) e.preventDefault();
+			});
 			select.valstore.change(function() {
 				select.updateMenu();
 			});
