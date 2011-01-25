@@ -33,7 +33,7 @@
 					// Show colon in label when expanded
 					init();
 					if(labeltext.indexOf(":") == -1) {
-						label.contents().get(0).nodeValue = labeltext.trim() + ":";
+						label.contents().get(0).nodeValue = $.trim(labeltext) + ":";
 					}
 				},
 				removeColon : function() {
