@@ -149,7 +149,7 @@
 		// init function
 		// Reset form
 		$("form").get(0).reset();
-		// Array holding all rich menus (currently not used, maybe convenient later - or not)
+		// Array holding all rich menus
 		var selects = [];
 		// Instantiate objects and add event handlers (possibly event handlers should be added inside RichSelect?)
 		$(".richselect").each(function(i, el) {
