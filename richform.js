@@ -14,7 +14,7 @@
 	var hide = changeMultiple("addClass", "jshidden");
 	var toggle = changeMultiple("toggleClass", "jshidden");
 	function visible(el) {
-		return !el.hasClass("jshidden");
+		return (el ? !el.hasClass("jshidden") : null);
 	}
 	function RichSelect(el) {
 		// Object for rich menu functionality
@@ -166,9 +166,16 @@
 					select.hideMenu();
 				else
 					select.showMenu();
+				e.stopPropagation(); // Don't let the document close the menu again
 			});
 			el.jkey('space', function() {
 				select.showMenu();
+			});
+			// Close any open menu
+			$(document).click(function() {
+				for(var i = 0; i < selects.length; i++) {
+					if(visible(selects[i].menu)) selects[i].hideMenu();
+				}
 			});
 			// Make into multiline select
 			select.menu.attr("size", select.menu.children().size());
