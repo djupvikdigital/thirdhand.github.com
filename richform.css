@@ -2,13 +2,29 @@
 	display: inline-block;
 	position: relative;
 	padding: 2px;
+	font-family: sans;
+	font-size: 10pt;
+}
+.richselect {
+	border: 1px solid #999999;
+	background-color: #cccccc;
+}
+.borderimage .richselect {
+	border: none;
 	-moz-border-image: url(richselect.png) 4;
 	-webkit-border-image: url(richselect.png) 4;
 	-o-border-image: url(richselect.png) 4;
 	border-image: url(richselect.png) 4;
-	font-family: sans;
-	font-size: 10pt;
 }
 .richselect img {
 	vertical-align: middle;
+}
+.js .menu {
+	display: block;
+	position: absolute;
+	left: 0;
+	z-index: 1;
+}
+.js .jshidden {
+	display: none;
 }

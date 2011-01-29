@@ -147,12 +147,6 @@
 	}
 	$(function() {
 		// init function
-		// Add js styles
-		var stylesheet = document.createElement("link");
-		stylesheet.setAttribute("rel", "Stylesheet");
-		stylesheet.setAttribute("type", "text/css");
-		stylesheet.setAttribute("href", "js.css");
-		document.getElementsByTagName("head")[0].appendChild(stylesheet);
 		// Reset form
 		$("form").get(0).reset();
 		// Array holding all rich menus (currently not used, maybe convenient later - or not)
