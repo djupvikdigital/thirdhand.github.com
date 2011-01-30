@@ -19,9 +19,9 @@
 	var docready = false;
 	// Array holding all rich menus
 	var selects = [];
-	function RichSelect(selector) {
+	function RichSelect(el) {
 		// Object for rich menu functionality
-		var el, name, showmenu, menubox, menutext, richopt, menu, valstore;
+		var name, showmenu, menubox, menutext, richopt, menu, valstore;
 		var showMenu = function() {
 			var el = menu ? menu : menubox;
 			show(el);
@@ -103,104 +103,93 @@
 				hide(menu);
 			}
 		}
-		function init() {
-			el = $(selector);
-			showmenu = (function() {
-				// Object for manipulating showmenu
-				var label = el.find(".showmenu");
-				label.click(function(e) {
-					e.preventDefault();
-				});
-				var labeltext;
-				function init() {
-					labeltext = label.contents().get(0).nodeValue;
-				}
-				return {
-					addColon : function() {
-						// Show colon in label when expanded
-						init();
-						if(labeltext.indexOf(":") == -1) {
-							label.contents().get(0).nodeValue = $.trim(labeltext) + ":";
-						}
-					},
-					removeColon : function() {
-						// Remove colon in label when collapsed
-						init();
-						label.contents().get(0).nodeValue = labeltext.replace(":", "");
+		showmenu = (function() {
+			// Object for manipulating showmenu
+			var label = el.find(".showmenu");
+			label.click(function(e) {
+				e.preventDefault();
+			});
+			var labeltext;
+			function init() {
+				labeltext = label.contents().get(0).nodeValue;
+			}
+			return {
+				addColon : function() {
+					// Show colon in label when expanded
+					init();
+					if(labeltext.indexOf(":") == -1) {
+						label.contents().get(0).nodeValue = $.trim(labeltext) + ":";
 					}
+				},
+				removeColon : function() {
+					// Remove colon in label when collapsed
+					init();
+					label.contents().get(0).nodeValue = labeltext.replace(":", "");
 				}
-			})();
-			showmenu.removeColon();
-			menubox = el.find(".menubox");
-			// Add empty element for holding option text
-			menubox.prepend("<span />");
-			menutext = menubox.children().first();
-			richopt = menubox.find(".richopt");
-			menu = el.find(".menu");
-			menu = menu.size() ? menu : null; // Check for existence of menu
-			hide(menubox, richopt, menu);
-			valstore = menubox.find(".valstore");
-			valstore = valstore.size() ? valstore : null; // Check for existence of valstore
-			name = (valstore ? valstore.attr("name") : menu.attr("name"));
-			// Event handlers for menu button
-			el.click(function(e) {
-				var target = $(e.target);
-				if(target.is(".menubox label") || target.is("input") || target.is(".removeval")) {
-					return;
-				}
-				if(visible(menu))
-					hideMenu();
-				else
-					showMenu();
-				e.stopPropagation(); // Don't let the document close the menu again
-			});
-			el.jkey('space', function() {
-				showMenu();
-			});
-			// Make into multiline select
-			menu.attr("size", menu.children().size());
-			// Event handlers keep menu and valstore in sync
-			menu.click(function(e) {
-				updateValstore();
-				// The richselect click handler hides the menu
-			});
-			menu.change(function(e) {
-				updateValstore();
-			});
-			menu.jkey('enter', function() {
-				updateValstore();
+			}
+		})();
+		showmenu.removeColon();
+		menubox = el.find(".menubox");
+		// Add empty element for holding option text
+		menubox.prepend("<span />");
+		menutext = menubox.children().first();
+		richopt = menubox.find(".richopt");
+		menu = el.find(".menu");
+		menu = menu.size() ? menu : null; // Check for existence of menu
+		hide(menubox, richopt, menu);
+		valstore = menubox.find(".valstore");
+		valstore = valstore.size() ? valstore : null; // Check for existence of valstore
+		name = (valstore ? valstore.attr("name") : menu.attr("name"));
+		// Event handlers for menu button
+		el.click(function(e) {
+			var target = $(e.target);
+			if(target.is(".menubox label") || target.is("input") || target.is(".removeval")) {
+				return;
+			}
+			if(visible(menu))
 				hideMenu();
-			});
-			// Prevent pressing enter in the menu from submitting the form
-			menu.keypress(function(e) {
-				if(e.which == 13) e.preventDefault();
-			});
-			valstore.change(function() {
-				updateMenu();
-			});
-			// Add remove button
-			menubox.append($("<img />", {
-				src : "remove.png",
-				alt : "remove",
-				"class" : "removeval",
-				click : function() {
-					removeVal();
-				}
-			}));
-			// Add dropdown image
-			el.append($("<img />", {
-				src : "dropdown.png",
-				alt : "dropdown"
-			}));
-			// Add self to selects array
-			selects[selects.length] = el;
-		}
-		if(docready) {
-			init();
-		}
-		else {
-			$(init);
-		}
+			else
+				showMenu();
+			e.stopPropagation(); // Don't let the document close the menu again
+		});
+		el.jkey('space', function() {
+			showMenu();
+		});
+		// Make into multiline select
+		menu.attr("size", menu.children().size());
+		// Event handlers keep menu and valstore in sync
+		menu.click(function(e) {
+			updateValstore();
+			// The richselect click handler hides the menu
+		});
+		menu.change(function(e) {
+			updateValstore();
+		});
+		menu.jkey('enter', function() {
+			updateValstore();
+			hideMenu();
+		});
+		// Prevent pressing enter in the menu from submitting the form
+		menu.keypress(function(e) {
+			if(e.which == 13) e.preventDefault();
+		});
+		valstore.change(function() {
+			updateMenu();
+		});
+		// Add remove button
+		menubox.append($("<img />", {
+			src : "remove.png",
+			alt : "remove",
+			"class" : "removeval",
+			click : function() {
+				removeVal();
+			}
+		}));
+		// Add dropdown image
+		el.append($("<img />", {
+			src : "dropdown.png",
+			alt : "dropdown"
+		}));
 		// Public object properties and methods (pretty much everything by now)
 		return {
 			menu : menu,
@@ -229,6 +218,19 @@
 		});
 		docready = true;
 	});
-	// Instantiate objects
-	RichSelect(".richselect");
+	// jQuery plugin
+	$.richselect = $.richselect || function(selector) {
+		function init(){
+			$(selector).each(function(i, el) {
+				selects[selects.length] = RichSelect($(el));
+			});
+		}
+		if(docready) {
+			init();
+		}
+		else {
+			$(init);
+		}
+	}
 })(jQuery);
+$.richselect(".richselect");
