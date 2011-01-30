@@ -212,7 +212,6 @@
 				if(visible(selects[i].menu)) selects[i].hideMenu();
 			}
 		});
-		docready = true;
 	});
 	// Array holding all rich menus
 	var selects = [];
