@@ -219,10 +219,12 @@
 		docready = true;
 	});
 	// jQuery plugin
-	$.richselect = $.richselect || function(selector) {
+	$.richselect = $.richselect || function(selector, callback) {
 		function init(){
 			$(selector).each(function(i, el) {
-				selects[selects.length] = RichSelect($(el));
+				var select = RichSelect($(el));
+				selects[selects.length] = select;
+				if(typeof callback === "function") callback(select);
 			});
 		}
 		if(docready) {
@@ -233,4 +235,3 @@
 		}
 	}
 })(jQuery);
-$.richselect(".richselect");
