@@ -16,7 +16,6 @@
 	function visible(el) {
 		return (el ? !el.hasClass("jshidden") : null);
 	}
-	var docready = false;
 	function RichSelect(el) {
 		// Object for rich menu functionality
 		var name, showmenu, menubox, menutext, richopt, menu, valstore;
@@ -219,19 +218,14 @@
 	var selects = [];
 	// jQuery plugin
 	$.richselect = $.richselect || function(selector, callback) {
-		function init(){
-			$(selector).each(function(i, el) {
-				var select = RichSelect($(el));
-				selects[selects.length] = select;
-				if(typeof callback === "function") callback(select);
-			});
-		}
-		if(docready) {
-			init();
-		}
-		else {
-			$(init);
-		}
+		var a = [];
+		$(selector).each(function(i, el) {
+			var select = RichSelect($(el));
+			a[a.length] = select;
+			selects[select.length] = select;
+			if(typeof callback === "function") callback(select);
+		});
+		return a;
 	}
 	$.richselect.selects = $.richselect.selects || selects;
 })(jQuery);
