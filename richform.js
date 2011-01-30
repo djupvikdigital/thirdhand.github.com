@@ -17,8 +17,6 @@
 		return (el ? !el.hasClass("jshidden") : null);
 	}
 	var docready = false;
-	// Array holding all rich menus
-	var selects = [];
 	function RichSelect(el) {
 		// Object for rich menu functionality
 		var name, showmenu, menubox, menutext, richopt, menu, valstore;
@@ -207,7 +205,6 @@
 		}
 	}
 	$(function() {
-		// init function
 		// Reset form
 		$("form").get(0).reset();
 		// Close any open menu
@@ -218,6 +215,8 @@
 		});
 		docready = true;
 	});
+	// Array holding all rich menus
+	var selects = [];
 	// jQuery plugin
 	$.richselect = $.richselect || function(selector, callback) {
 		function init(){
@@ -234,4 +233,5 @@
 			$(init);
 		}
 	}
+	$.richselect.selects = $.richselect.selects || selects;
 })(jQuery);
