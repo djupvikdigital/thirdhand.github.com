@@ -59,6 +59,7 @@
 				menutext.text(option.text());
 				show(menubox);
 			}
+			positionMenu();
 		}
 		var updateMenu = function() {
 			// Update selected menu option from valstore value
@@ -137,8 +138,11 @@
 		// Make into multiline select
 		menu.attr("size", menu.children().size());
 		hide(menubox, richopt, menu);
-		// Set menu to show below button
-		menu.css("top", el.innerHeight() - 2);
+		function positionMenu() {
+			// Set menu to show below button
+			menu.css("top", el.innerHeight() - 2);
+		}
+		positionMenu();
 		valstore = menubox.find(".valstore");
 		valstore = valstore.size() ? valstore : null; // Check for existence of valstore
 		name = (valstore ? valstore.attr("name") : menu.attr("name"));
