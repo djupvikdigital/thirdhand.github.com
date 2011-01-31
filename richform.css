@@ -24,6 +24,7 @@
 	display: block;
 	position: absolute;
 	z-index: 1;
+	left: 0;
 }
 .js .jshidden {
 	display: none;
