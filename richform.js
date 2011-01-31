@@ -111,6 +111,7 @@
 				labeltext = label.contents().get(0).nodeValue;
 			}
 			return {
+				obj : label,
 				addColon : function() {
 					// Show colon in label when expanded
 					init();
@@ -133,7 +134,11 @@
 		richopt = menubox.find(".richopt");
 		menu = el.find(".menu");
 		menu = menu.size() ? menu : null; // Check for existence of menu
+		// Make into multiline select
+		menu.attr("size", menu.children().size());
 		hide(menubox, richopt, menu);
+		// Set menu to show below button
+		menu.css("top", el.innerHeight() - 2);
 		valstore = menubox.find(".valstore");
 		valstore = valstore.size() ? valstore : null; // Check for existence of valstore
 		name = (valstore ? valstore.attr("name") : menu.attr("name"));
@@ -152,8 +157,6 @@
 		el.jkey('space', function() {
 			showMenu();
 		});
-		// Make into multiline select
-		menu.attr("size", menu.children().size());
 		// Event handlers keep menu and valstore in sync
 		menu.click(function(e) {
 			updateValstore();
@@ -203,6 +206,8 @@
 			removeVal : removeVal
 		}
 	}
+	// Array holding all rich menus
+	var selects = [];
 	$(function() {
 		// Reset form
 		$("form").get(0).reset();
@@ -213,15 +218,13 @@
 			}
 		});
 	});
-	// Array holding all rich menus
-	var selects = [];
 	// jQuery plugin
 	$.richselect = $.richselect || function(selector, callback) {
 		var a = [];
 		$(selector).each(function(i, el) {
 			var select = RichSelect($(el));
 			a[a.length] = select;
-			selects[select.length] = select;
+			selects[selects.length] = select;
 			if(typeof callback === "function") callback(select);
 		});
 		return a;
