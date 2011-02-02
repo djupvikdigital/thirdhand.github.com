@@ -239,6 +239,12 @@
 		this.valstore = new Valstore(el.find(".valstore"));
 		this.menu.update();
 		this.name = (this.valstore.exists() ? this.valstore.name : this.menu.name);
+		// Make text unselectable in IE
+		if(typeof el.get(0).unselectable !== "undefined") {
+			el.find("*").each(function(i, el) {
+				if($(el).not("input, select, textarea")) el.unselectable = true;
+			});
+		}
 		// Event handlers for menu button
 		el.click(function(e) {
 			var target = $(e.target);

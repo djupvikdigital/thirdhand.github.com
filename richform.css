@@ -17,6 +17,22 @@
 	-o-border-image: url(richselect.png) 4;
 	border-image: url(richselect.png) 4;
 }
+.js .richselect {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+.js .richselect input,
+.js .richselect select,
+.js .richselect textarea {
+	-webkit-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-o-user-select: text;
+	user-select: text;
+}
 .richselect img {
 	vertical-align: middle;
 }
