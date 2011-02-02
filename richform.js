@@ -156,6 +156,7 @@
 				if(!menu) return false;
 				menu.get(0).selectedIndex = -1;
 				hide(menu);
+				this.position();
 				return true;
 			};
 			this.val = function() {
@@ -241,8 +242,9 @@
 		this.name = (this.valstore.exists() ? this.valstore.name : this.menu.name);
 		// Make text unselectable in IE
 		if(typeof el.get(0).unselectable !== "undefined") {
+			el.get(0).unselectable = true;
 			el.find("*").each(function(i, el) {
-				if($(el).not("input, select, textarea")) el.unselectable = true;
+				if(!$(el).is("input, select, textarea")) el.unselectable = true;
 			});
 		}
 		// Event handlers for menu button
