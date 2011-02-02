@@ -8,7 +8,7 @@
 				if(args[i] && args[i][method]) args[i][method](arg);
 			}
 			return true;
-		}
+		};
 	}
 	var show = changeMultiple("removeClass", "jshidden");
 	var hide = changeMultiple("addClass", "jshidden");
@@ -16,199 +16,249 @@
 	function visible(el) {
 		return (el ? !el.hasClass("jshidden") : null);
 	}
+	function MenuLabel(label) {
+		// Object for manipulating menulabel
+		label.click(function(e) {
+			e.preventDefault();
+		});
+		var labeltext;
+		function init() {
+			labeltext = label.contents().get(0).nodeValue;
+		}
+		this.obj = label;
+		this.addColon = function() {
+			// Show colon in label when expanded
+			init();
+			if(labeltext.indexOf(":") == -1) {
+				label.contents().get(0).nodeValue = $.trim(labeltext) + ":";
+			}
+		};
+		this.removeColon = function() {
+			// Remove colon in label when collapsed
+			init();
+			label.contents().get(0).nodeValue = labeltext.replace(":", "");
+		};
+		this.removeColon();
+	}
 	function RichSelect(el) {
 		// Object for rich menu functionality
-		var name, showmenu, menubox, menutext, richopt, menu, valstore;
-		var showMenu = function() {
-			var el = menu ? menu : menubox;
-			show(el);
-			if(menu) {
-				menu.focus();
-			}
-		}
-		var hideMenu = function() {
-			var el = menu ? menu : menubox;
-			hide(el);
-			var inputs = richopt.find("input");
-			// Select form element for added usability
-			if(inputs.size()) {
-				inputs.first().select();
-			}
-		}
-		var getVal = function() {
-			var val;
-			if(valstore) {
-				val = valstore.val();
-			}
-			else {
-				var option = menu.children("option:selected");
-				if(option.size()) val = option.val();
-			}
-			return val;
-		}
-		var updateMenubox = function(option) {
-			// Shows selected option. If option is a richopt show that element.
-			showmenu.addColon();
-			option = option || menu.children("option:selected");
-			if(option.hasClass("richopt")) {
-				menutext.text("");
-				show(richopt, menubox);
-			}
-			else {
-				if(!richopt.hasClass("jshidden")) hide(richopt);
-				menutext.text(option.text());
+		var rs = this;
+		function MenuBox(menubox) {
+			// Add empty element for holding option text
+			menubox.prepend("<span />");
+			var menutext = menubox.children().first();
+			var richopt = menubox.find(".richopt");
+			hide(menubox, richopt);
+			// Add remove button
+			menubox.append($("<img />", {
+				src : "remove.png",
+				alt : "remove",
+				"class" : "removeval",
+				click : function() {
+					rs.removeVal();
+				}
+			}));
+			this.update = function(option) {
+				// Shows selected option. If option is a richopt show that element.
+				rs.menulabel.addColon();
+				if(option.hasClass("richopt")) {
+					menutext.text("");
+					show(richopt, menubox);
+				}
+				else {
+					if(!richopt.hasClass("jshidden")) hide(richopt);
+					menutext.text(option.text());
+					show(menubox);
+				}
+				rs.menu.position();
+			};
+			this.show = function() {
 				show(menubox);
-			}
-			positionMenu();
+			};
+			this.hide = function() {
+				hide(menubox);
+			};
+			this.reset = function() {
+				hide(menubox);
+				menutext.text("");
+			};
+			this.focus = function() {
+				if(!visible(richopt)) return false;
+				var inputs = richopt.find("input");
+				// Select form element for added usability
+				if(inputs.size()) {
+					inputs.first().select();
+				}
+				return true;
+			};
 		}
-		var updateMenu = function() {
-			// Update selected menu option from valstore value
-			if(!menu) return;
-			var option;
-			var found = false;
-			if(valstore) {
-				menu.children().each(function(i, el) {
-					option = $(el);
-					if(option.val() === valstore.val()) {
-						option.attr("selected", "selected");
-						found = true;
-						return false;
-					}
-				});
-			}
-			else {
-				option = menu.children("option:selected");
-				if(option.size()) found = true;
-			}
-			if(found) updateMenubox(option);
-		}
-		var updateValstore = function() {
-			// Update valstore from selected menu option
-			var option = menu.children("option:selected");
-			if(option.size()) {
-				updateMenubox(option);
-				if(valstore) valstore.val(option.val());
-			}
-		}
-		var removeVal = function() {
-			// Remove value and collapse menu button to initial form
-			showmenu.removeColon();
-			hide(menubox);
-			menutext.text("");
-			if(valstore) valstore.val("");
-			if(menu) {
+		function Menu(menu) {
+			var self = this;
+			menu = (menu && menu.size()) ? menu : null; // Check for existence of menu
+			this.name = menu ? menu.attr("name") : "";
+			this.position = function() {
+				// Set menu to show below button
+				if(menu) menu.css("top", el.innerHeight() - 2);
+			};
+			this.visible = function() {
+				return menu ? visible(menu) : false;
+			};
+			this.show = function() {
+				if(menu) {
+					show(menu);
+					menu.focus();
+				}
+				else rs.menubox.show();
+			};
+			this.hide = function() {
+				if(menu) {
+					hide(menu);
+					rs.menubox.focus();
+				}
+				else rs.menubox.hide();
+			};
+			this.update = function() {
+				// Update selected menu option from valstore value
+				if(!menu) return false;
+				var option;
+				var found = false;
+				if(rs.valstore) {
+					menu.children().each(function(i, el) {
+						option = $(el);
+						if(option.val() === rs.valstore.val()) {
+							self.selected(option);
+							found = true;
+							return false;
+						}
+					});
+				}
+				else {
+					option = this.selected();
+					if(option) found = true;
+				}
+				if(found) {
+					rs.menubox.update(option);
+					return true;
+				}
+				return false;
+			};
+			this.selected = function(o) {
+				if(!menu) return null;
+				if(o) {
+					o.attr("selected", "selected");
+					return o;
+				}
+				o = menu.children("option:selected");
+				if(!o.size()) o = null;
+				return o;
+			};
+			this.reset = function() {
+				if(!menu) return false;
 				menu.get(0).selectedIndex = -1;
 				hide(menu);
+				return true;
+			};
+			this.val = function() {
+				var val = "";
+				var o = menu.selected();
+				if(o) val = o.val();
+				return val;
+			};
+			if(menu) {
+				// Event handlers keep menu and valstore in sync
+				menu.click(function(e) {
+					rs.valstore.update();
+					// The richselect click handler hides the menu
+				});
+				menu.change(function(e) {
+					rs.valstore.update();
+				});
+				menu.jkey('enter', function() {
+					rs.valstore.update();
+					self.hide();
+				});
+				// Prevent pressing enter in the menu from submitting the form
+				menu.keypress(function(e) {
+					if(e.which == 13) e.preventDefault();
+				});
+				hide(menu);
+				// Make into multiline select
+				menu.attr("size", menu.children().size());
+				this.position();
 			}
 		}
-		showmenu = (function() {
-			// Object for manipulating showmenu
-			var label = el.find(".showmenu");
-			label.click(function(e) {
-				e.preventDefault();
-			});
-			var labeltext;
-			function init() {
-				labeltext = label.contents().get(0).nodeValue;
+		function Valstore(valstore) {
+			valstore = valstore.size() ? valstore : null; // Check for existence of valstore
+			if(valstore) {
+				valstore.change(function() {
+					rs.menu.update();
+				});
 			}
-			return {
-				obj : label,
-				addColon : function() {
-					// Show colon in label when expanded
-					init();
-					if(labeltext.indexOf(":") == -1) {
-						label.contents().get(0).nodeValue = $.trim(labeltext) + ":";
-					}
-				},
-				removeColon : function() {
-					// Remove colon in label when collapsed
-					init();
-					label.contents().get(0).nodeValue = labeltext.replace(":", "");
+			this.name = valstore ? valstore.attr("name") : "";
+			this.exists = function() {
+				return valstore ? true : false;
+			};
+			this.val = function() {
+				return valstore ? valstore.val() : "";
+			};
+			this.update = function() {
+				// Update valstore from selected menu option
+				if(!valstore) return false;
+				var option = rs.menu.selected();
+				if(option) {
+					rs.menubox.update(option);
+					valstore.val(option.val());
 				}
-			}
-		})();
-		showmenu.removeColon();
-		menubox = el.find(".menubox");
-		// Add empty element for holding option text
-		menubox.prepend("<span />");
-		menutext = menubox.children().first();
-		richopt = menubox.find(".richopt");
-		menu = el.find(".menu");
-		menu = menu.size() ? menu : null; // Check for existence of menu
-		// Make into multiline select
-		menu.attr("size", menu.children().size());
-		hide(menubox, richopt, menu);
-		function positionMenu() {
-			// Set menu to show below button
-			menu.css("top", el.innerHeight() - 2);
+				return true;
+			};
+			this.reset = function() {
+				if(!valstore) return false;
+				valstore.val("");
+				return true;
+			};
 		}
-		positionMenu();
-		valstore = menubox.find(".valstore");
-		valstore = valstore.size() ? valstore : null; // Check for existence of valstore
-		name = (valstore ? valstore.attr("name") : menu.attr("name"));
+		this.getVal = function() {
+			var val;
+			if(rs.valstore.exists()) {
+				val = rs.valstore.val();
+			}
+			else {
+				val = rs.menu.val();
+			}
+			return val;
+		};
+		this.removeVal = function() {
+			// Remove value and collapse menu button to initial form
+			rs.menulabel.removeColon();
+			rs.menubox.reset();
+			rs.valstore.reset();
+			rs.menu.reset();
+		};
+		this.menulabel = new MenuLabel(el.find(".showmenu"));
+		this.menubox = new MenuBox(el.find(".menubox"));
+		this.menu = new Menu(el.find(".menu"));
+		this.valstore = new Valstore(el.find(".valstore"));
+		this.name = (this.valstore.exists() ? this.valstore.name : this.menu.name);
 		// Event handlers for menu button
 		el.click(function(e) {
 			var target = $(e.target);
 			if(target.is(".menubox label") || target.is("input") || target.is(".removeval")) {
 				return;
 			}
-			if(visible(menu))
-				hideMenu();
+			if(rs.menu.visible())
+				rs.menu.hide();
 			else
-				showMenu();
+				rs.menu.show();
 			e.stopPropagation(); // Don't let the document close the menu again
 		});
 		el.jkey('space', function() {
-			showMenu();
+			rs.menu.show();
 		});
-		// Event handlers keep menu and valstore in sync
-		menu.click(function(e) {
-			updateValstore();
-			// The richselect click handler hides the menu
-		});
-		menu.change(function(e) {
-			updateValstore();
-		});
-		menu.jkey('enter', function() {
-			updateValstore();
-			hideMenu();
-		});
-		// Prevent pressing enter in the menu from submitting the form
-		menu.keypress(function(e) {
-			if(e.which == 13) e.preventDefault();
-		});
-		valstore.change(function() {
-			updateMenu();
-		});
-		// Add remove button
-		menubox.append($("<img />", {
-			src : "remove.png",
-			alt : "remove",
-			"class" : "removeval",
-			click : function() {
-				removeVal();
-			}
-		}));
 		// Add dropdown image
 		el.append($("<img />", {
 			src : "dropdown.png",
 			alt : "dropdown"
 		}));
-		// Public object properties and methods (pretty much everything by now)
-		return {
-			menu : menu,
-			menubox : menubox,
-			menutext : menutext,
-			valstore : valstore,
-			name : name,
-			showMenu : showMenu,
-			hideMenu : hideMenu,
-			getVal : getVal,
-			updateMenubox : updateMenubox,
-			updateMenu : updateMenu,
-			updateValstore : updateValstore,
-			removeVal : removeVal
-		}
 	}
 	// Array holding all rich menus
 	var selects = [];
@@ -218,7 +268,7 @@
 		// Close any open menu
 		$(document).click(function() {
 			for(var i = 0; i < selects.length; i++) {
-				if(visible(selects[i].menu)) selects[i].hideMenu();
+				if(selects[i].menu.visible()) selects[i].menu.hide();
 			}
 		});
 	});
@@ -226,12 +276,12 @@
 	$.richselect = $.richselect || function(selector, callback) {
 		var a = [];
 		$(selector).each(function(i, el) {
-			var select = RichSelect($(el));
+			var select = new RichSelect($(el));
 			a[a.length] = select;
 			selects[selects.length] = select;
 			if(typeof callback === "function") callback(select);
 		});
 		return a;
-	}
+	};
 	$.richselect.selects = $.richselect.selects || selects;
 })(jQuery);
