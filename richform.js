@@ -244,7 +244,7 @@
 		if(typeof el.get(0).unselectable !== "undefined") {
 			el.get(0).unselectable = true;
 			el.find("*").each(function(i, el) {
-				if(!$(el).is("input, select, textarea")) el.unselectable = true;
+				if(!$(el).is("input, select, textarea")) el.unselectable = "on";
 			});
 		}
 		// Event handlers for menu button
