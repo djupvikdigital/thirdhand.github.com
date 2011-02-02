@@ -73,13 +73,15 @@
 				rs.menu.position();
 			};
 			this.show = function() {
+				rs.menulabel.addColon();
 				show(menubox);
 			};
 			this.hide = function() {
+				rs.menulabel.removeColon();
 				hide(menubox);
 			};
 			this.reset = function() {
-				hide(menubox);
+				this.hide();
 				menutext.text("");
 			};
 			this.focus = function() {
@@ -122,7 +124,7 @@
 				if(!menu) return false;
 				var option;
 				var found = false;
-				if(rs.valstore) {
+				if(rs.valstore.exists()) {
 					menu.children().each(function(i, el) {
 						option = $(el);
 						if(option.val() === rs.valstore.val()) {
@@ -138,9 +140,8 @@
 				}
 				if(found) {
 					rs.menubox.update(option);
-					return true;
 				}
-				return false;
+				return found;
 			};
 			this.selected = function(o) {
 				if(!menu) return null;
@@ -189,11 +190,6 @@
 		}
 		function Valstore(valstore) {
 			valstore = valstore.size() ? valstore : null; // Check for existence of valstore
-			if(valstore) {
-				valstore.change(function() {
-					rs.menu.update();
-				});
-			}
 			this.name = valstore ? valstore.attr("name") : "";
 			this.exists = function() {
 				return valstore ? true : false;
@@ -216,6 +212,11 @@
 				valstore.val("");
 				return true;
 			};
+			if(valstore) {
+				valstore.change(function() {
+					rs.menu.update();
+				});
+			}
 		}
 		this.getVal = function() {
 			var val;
@@ -229,7 +230,6 @@
 		};
 		this.removeVal = function() {
 			// Remove value and collapse menu button to initial form
-			rs.menulabel.removeColon();
 			rs.menubox.reset();
 			rs.valstore.reset();
 			rs.menu.reset();
@@ -238,6 +238,7 @@
 		this.menubox = new MenuBox(el.find(".menubox"));
 		this.menu = new Menu(el.find(".menu"));
 		this.valstore = new Valstore(el.find(".valstore"));
+		this.menu.update();
 		this.name = (this.valstore.exists() ? this.valstore.name : this.menu.name);
 		// Event handlers for menu button
 		el.click(function(e) {
@@ -263,8 +264,6 @@
 	// Array holding all rich menus
 	var selects = [];
 	$(function() {
-		// Reset form
-		$("form").get(0).reset();
 		// Close any open menu
 		$(document).click(function() {
 			for(var i = 0; i < selects.length; i++) {
