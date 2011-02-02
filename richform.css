@@ -22,6 +22,7 @@
 	-webkit-user-select: none;
 	-moz-user-select: -moz-none;
 	user-select: none;
+	cursor: default;
 }
 .js .richselect input,
 .js .richselect select,
@@ -30,6 +31,10 @@
 	-webkit-user-select: auto;
 	-moz-user-select: text;
 	user-select: text;
+}
+.js .richselect input,
+.js .richselect textarea {
+	cursor: text;
 }
 .richselect img {
 	vertical-align: middle;
