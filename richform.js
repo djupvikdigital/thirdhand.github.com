@@ -12,7 +12,6 @@
 	}
 	var show = changeMultiple("removeClass", "jshidden");
 	var hide = changeMultiple("addClass", "jshidden");
-	var toggle = changeMultiple("toggleClass", "jshidden");
 	function visible(el) {
 		return (el ? !el.hasClass("jshidden") : null);
 	}
