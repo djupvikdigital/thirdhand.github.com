@@ -257,6 +257,8 @@
 		this.valstore = new Valstore(el.find(".valstore"));
 		this.menu.update();
 		this.name = (this.valstore.exists() ? this.valstore.name : this.menu.name);
+		// Get tabindex for keyboard navigation
+		if(!el.attr("tabindex")) el.attr("tabindex", "0");
 		// Make text unselectable in IE and Opera
 		if(typeof el.get(0).unselectable !== "undefined") {
 			el.get(0).unselectable = "on";
