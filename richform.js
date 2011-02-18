@@ -206,13 +206,12 @@
 			};
 			this.update = function() {
 				// Update valstore from selected menu option
-				if(!valstore) return false;
 				var option = rs.menu.selected();
 				if(option) {
 					rs.menubox.update(option);
-					valstore.val(option.val());
+					if(valstore) valstore.val(option.val());
 				}
-				return true;
+				return valstore;
 			};
 			this.reset = function() {
 				if(!valstore) return false;
