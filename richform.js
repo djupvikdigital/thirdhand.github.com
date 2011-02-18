@@ -107,6 +107,9 @@
 			var self = this;
 			menu = (menu && menu.size()) ? menu : null; // Check for existence of menu
 			this.name = menu ? menu.attr("name") : "";
+			this.exists = function() {
+				return menu ? true : false;
+			};
 			this.position = function() {
 				// Set menu to show below button
 				if(menu) menu.css("top", el.innerHeight() - 2);
@@ -277,10 +280,12 @@
 			rs.menu.show();
 		});
 		// Add dropdown image
-		el.append($("<img />", {
-			src : imgpath + "dropdown.png",
-			alt : "dropdown"
-		}));
+		if(this.menu.exists) {
+			el.append($("<img />", {
+				src : imgpath + "dropdown.png",
+				alt : "dropdown"
+			}));
+		}
 	}
 	// Array holding all rich menus
 	var selects = [];
