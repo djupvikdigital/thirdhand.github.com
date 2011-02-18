@@ -280,7 +280,7 @@
 			rs.menu.show();
 		});
 		// Add dropdown image
-		if(this.menu.exists) {
+		if(this.menu.exists()) {
 			el.append($("<img />", {
 				src : imgpath + "dropdown.png",
 				alt : "dropdown"
