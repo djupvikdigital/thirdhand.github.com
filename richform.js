@@ -42,6 +42,10 @@
 	function RichSelect(el, opts) {
 		// Object for rich menu functionality
 		opts = opts || {};
+		var settings = $.extend({
+			imagePath : ""
+		}, opts);
+		var imgpath = settings.imagePath;
 		var rs = this;
 		function MenuBox(menubox) {
 			// Add empty element for holding option text
@@ -57,7 +61,7 @@
 				}
 			}));
 			menubox.children().last().html($("<img />", {
-				src : "remove.png",
+				src : imgpath + "remove.png",
 				alt : "remove"
 			}));
 			this.update = function(option) {
@@ -272,7 +276,7 @@
 		});
 		// Add dropdown image
 		el.append($("<img />", {
-			src : "dropdown.png",
+			src : imgpath + "dropdown.png",
 			alt : "dropdown"
 		}));
 	}
