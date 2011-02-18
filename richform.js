@@ -238,7 +238,7 @@
 		this.removeVal = function() {
 			// Call event and if it returns false cancel
 			if(typeof opts.removeVal === "function") {
-				if(!opts.removeVal(rs)) return false;
+				if(opts.removeVal(rs) === false) return false;
 			}
 			// Remove value and collapse menu button to initial form
 			rs.menubox.reset();
