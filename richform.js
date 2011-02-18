@@ -78,6 +78,9 @@
 				}
 				rs.menu.position();
 			};
+			this.visible = function() {
+				return visible(menubox);
+			};
 			this.show = function() {
 				rs.menulabel.addColon();
 				show(menubox);
@@ -109,7 +112,7 @@
 				if(menu) menu.css("top", el.innerHeight() - 2);
 			};
 			this.visible = function() {
-				return menu ? visible(menu) : false;
+				return menu ? visible(menu) : rs.menubox.visible();
 			};
 			this.show = function() {
 				if(menu) {
