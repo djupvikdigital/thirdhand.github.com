@@ -242,7 +242,7 @@
 		this.name = (this.valstore.exists() ? this.valstore.name : this.menu.name);
 		// Make text unselectable in IE and Opera
 		if(typeof el.get(0).unselectable !== "undefined") {
-			el.get(0).unselectable = true;
+			el.get(0).unselectable = "on";
 			el.find("*").each(function(i, el) {
 				if(!$(el).is("input, select, textarea")) el.unselectable = "on";
 			});
