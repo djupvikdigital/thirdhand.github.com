@@ -1,12 +1,17 @@
+span {
+	padding: 0;
+	margin: 0;
+}
 .richselect {
 	display: inline-block;
 	position: relative;
-	padding: 2px;
+	padding: 0;
+	line-height: 30px;
 	font-family: sans;
 	font-size: 10pt;
 	zoom: 1; /* IE has layout */
 }
-.richselect {
+.no-borderimage .richselect {
 	border: 1px solid #999999;
 	background-color: #cccccc;
 }
@@ -38,6 +43,12 @@
 }
 .richselect img {
 	vertical-align: middle;
+}
+.removeval {
+	border: 1px solid black;
+	background-color: white;
+	display: inline-block;
+	zoom: 1; /* IE has layout */
 }
 .js .menu {
 	display: block;

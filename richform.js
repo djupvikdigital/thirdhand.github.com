@@ -49,13 +49,15 @@
 			var richopt = menubox.find(".richopt");
 			hide(menubox, richopt);
 			// Add remove button
-			menubox.append($("<img />", {
-				src : "remove.png",
-				alt : "remove",
+			menubox.append($("<span />", {
 				"class" : "removeval",
 				click : function() {
 					rs.removeVal();
 				}
+			}));
+			menubox.children().last().html($("<img />", {
+				src : "remove.png",
+				alt : "remove"
 			}));
 			this.update = function(option) {
 				// Shows selected option. If option is a richopt show that element.
