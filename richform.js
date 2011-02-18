@@ -39,8 +39,9 @@
 		};
 		this.removeColon();
 	}
-	function RichSelect(el) {
+	function RichSelect(el, opts) {
 		// Object for rich menu functionality
+		opts = opts || {};
 		var rs = this;
 		function MenuBox(menubox) {
 			// Add empty element for holding option text
@@ -231,10 +232,15 @@
 			return val;
 		};
 		this.removeVal = function() {
+			// Call event and if it returns false cancel
+			if(typeof opts.removeVal === "function") {
+				if(!opts.removeVal(rs)) return false;
+			}
 			// Remove value and collapse menu button to initial form
 			rs.menubox.reset();
 			rs.valstore.reset();
 			rs.menu.reset();
+			return true;
 		};
 		this.menulabel = new MenuLabel(el.find(".showmenu"));
 		this.menubox = new MenuBox(el.find(".menubox"));
@@ -281,10 +287,11 @@
 		});
 	});
 	// jQuery plugin
-	$.richselect = $.richselect || function(selector, callback) {
+	$.richselect = $.richselect || function(selector, opts, callback) {
+		opts = opts || {};
 		var a = [];
 		$(selector).each(function(i, el) {
-			var select = new RichSelect($(el));
+			var select = new RichSelect($(el), opts);
 			a[a.length] = select;
 			selects[selects.length] = select;
 			if(typeof callback === "function") callback(select);
