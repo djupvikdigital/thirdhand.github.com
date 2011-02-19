@@ -56,14 +56,19 @@
 			// Add remove button
 			menubox.append($("<span />", {
 				"class" : "removeval",
+				tabindex : "0",
 				click : function() {
 					rs.removeVal();
 				}
 			}));
-			menubox.children().last().html($("<img />", {
+			var removeval = menubox.children().last();
+			removeval.html($("<img />", {
 				src : imgpath + "remove.png",
 				alt : "remove"
 			}));
+			removeval.jkey("enter, backspace, delete", function() {
+				rs.removeVal();
+			});
 			this.update = function(option) {
 				// Shows selected option. If option is a richopt show that element.
 				rs.menulabel.addColon();
@@ -165,6 +170,30 @@
 				if(!o.size()) o = null;
 				return o;
 			};
+			this.selectNext = function() {
+				if(!menu) return null;
+				var el = menu.get(0);
+				if(!rs.menubox.visible()) {
+					el.selectedIndex = 0;
+				}
+				else if(el.selectedIndex + 1 < menu.children().size()) {
+					el.selectedIndex += 1;
+				}
+				rs.valstore.update();
+				return el.selectedIndex;
+			};
+			this.selectPrev = function() {
+				if(!menu) return null;
+				var el = menu.get(0);
+				if(el.selectedIndex === 0) {
+					rs.removeVal();
+				}
+				else if(el.selectedIndex - 1 > -1) {
+					el.selectedIndex -= 1;
+					rs.valstore.update();
+				}
+				return el.selectedIndex;
+			};
 			this.reset = function() {
 				if(!menu) return false;
 				menu.get(0).selectedIndex = -1;
@@ -191,6 +220,9 @@
 					rs.valstore.update();
 					self.hide();
 				});
+				menu.jkey('esc', function() {
+					self.hide();
+				});
 				// Prevent pressing enter in the menu from submitting the form
 				menu.keypress(function(e) {
 					if(e.which == 13) e.preventDefault();
@@ -207,8 +239,12 @@
 			this.exists = function() {
 				return valstore ? true : false;
 			};
-			this.val = function() {
-				return valstore ? valstore.val() : "";
+			this.val = function(val) {
+				if(valstore) {
+					if(val) valstore.val(val);
+					return valstore.val();
+				}
+				return "";
 			};
 			this.update = function() {
 				// Update valstore from selected menu option
@@ -240,6 +276,12 @@
 			}
 			return val;
 		};
+		this.setVal = function(val) {
+			if(rs.valstore.exists()) {
+				rs.valstore.val(val);
+				rs.menu.update();
+			}
+		};
 		this.removeVal = function() {
 			// Call event and if it returns false cancel
 			if(typeof opts.removeVal === "function") {
@@ -257,14 +299,19 @@
 		this.valstore = new Valstore(el.find(".valstore"));
 		this.menu.update();
 		this.name = (this.valstore.exists() ? this.valstore.name : this.menu.name);
-		// Get tabindex for keyboard navigation
-		if(!el.attr("tabindex")) el.attr("tabindex", "0");
 		// Make text unselectable in IE and Opera
 		if(typeof el.get(0).unselectable !== "undefined") {
 			el.get(0).unselectable = "on";
 			el.find("*").each(function(i, el) {
 				if(!$(el).is("input, select, textarea")) el.unselectable = "on";
 			});
+		}
+		// Add dropdown image
+		if(this.menu.exists()) {
+			el.append($("<img />", {
+				src : imgpath + "dropdown.png",
+				alt : "dropdown"
+			}));
 		}
 		// Event handlers for menu button
 		el.click(function(e) {
@@ -278,16 +325,18 @@
 				rs.menu.show();
 			e.stopPropagation(); // Don't let the document close the menu again
 		});
-		el.jkey('space', function() {
-			rs.menu.show();
+		// Get tabindex for keyboard navigation
+		if(!el.attr("tabindex")) el.attr("tabindex", "0");
+		el.jkey('down', function() {
+			rs.menu.selectNext();
+			var opt = rs.menu.selected();
+			(opt && opt.hasClass("richopt")) ? rs.menubox.focus() : el.focus();
 		});
-		// Add dropdown image
-		if(this.menu.exists()) {
-			el.append($("<img />", {
-				src : imgpath + "dropdown.png",
-				alt : "dropdown"
-			}));
-		}
+		el.jkey('up', function() {
+			rs.menu.selectPrev();
+			var opt = rs.menu.selected();
+			(opt && opt.hasClass("richopt")) ? rs.menubox.focus() : el.focus();
+		});
 	}
 	// Array holding all rich menus
 	var selects = [];
