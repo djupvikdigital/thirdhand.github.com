@@ -58,6 +58,7 @@
 				"class" : "removeval",
 				tabindex : "0",
 				click : function() {
+					e.stopPropagation();
 					rs.removeVal();
 				}
 			}));
@@ -320,15 +321,15 @@
 		}
 		// Event handlers for menu button
 		el.click(function(e) {
+			e.stopPropagation(); // Don't let the document close the menu again
 			var target = $(e.target);
-			if(target.is(".menubox label") || target.is("input") || target.is(".removeval")) {
+			if(target.is(".menubox label") || target.is("input")) {
 				return;
 			}
 			if(rs.menu.visible())
 				rs.menu.hide();
 			else
 				rs.menu.show();
-			e.stopPropagation(); // Don't let the document close the menu again
 		});
 		// Get tabindex for keyboard navigation
 		if(!el.attr("tabindex")) el.attr("tabindex", "0");
