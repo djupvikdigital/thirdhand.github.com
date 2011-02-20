@@ -57,7 +57,7 @@
 			menubox.append($("<span />", {
 				"class" : "removeval",
 				tabindex : "0",
-				click : function() {
+				click : function(e) {
 					e.stopPropagation();
 					rs.removeVal();
 				}
