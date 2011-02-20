@@ -222,6 +222,11 @@
 				});
 				menu.jkey('esc', function() {
 					self.hide();
+					el.focus();
+				});
+				// Prevent key events from bubbling up to the richselect
+				menu.keydown(function(e) {
+					e.stopPropagation();
 				});
 				// Prevent pressing enter in the menu from submitting the form
 				menu.keypress(function(e) {
