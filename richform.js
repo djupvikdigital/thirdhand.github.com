@@ -1,3 +1,6 @@
+/* Copyright (c) 2011 Reidar Djupvik
+This software is MIT licensed; see http://www.opensource.org/licenses/mit-license.php */
+
 (function($) {
 	function changeMultiple(method, arg) {
 		// Apply the same method and arg to multiple objects
