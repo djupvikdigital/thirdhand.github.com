@@ -1,12 +1,33 @@
+html {
+	font-family: 'Open Sans', sans-serif;
+	line-height: 1.5;
+}
+
 html, body {
 	height: 100%;
+}
+
+h1 {
+	font-family: 'Rokkitt', serif;
+	text-transform: uppercase;
+}
+
+h2 {
+	font-size: 1.4em;
+	margin: .5em 0 .2em;
+}
+
+p {
+	margin: 0 0 .5em;
 }
 
 .wrapper {
 	background: url(loader-plain.svg) no-repeat;
 	background-position: left 5%;
-	background-size: 80% 80%;
-	padding: 0 30%;
+	background-size: 80% auto;
 	min-height: 100%;
+	max-width: 40em;
+	padding: 0 5em;
+	margin: 0 auto;
 	overflow: hidden;
 }
