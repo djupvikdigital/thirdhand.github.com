@@ -31,3 +31,9 @@ p {
 	margin: 0 auto;
 	overflow: hidden;
 }
+
+.logo {
+	width: 2em;
+	margin-left: -0.5em;
+	vertical-align: bottom;
+}
