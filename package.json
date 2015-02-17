@@ -1,0 +1,23 @@
+{
+  "name": "3rdhand.info",
+  "version": "0.0.0",
+  "description": "Reidar Djupvik's personal website",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thirdhand/thirdhand.github.com.git"
+  },
+  "author": "Reidar Djupvik",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thirdhand/thirdhand.github.com/issues"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-svgmin": "^2.0.0"
+  }
+}
