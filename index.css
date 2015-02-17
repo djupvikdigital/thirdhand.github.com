@@ -22,7 +22,7 @@ p {
 }
 
 .wrapper {
-	background: url(loader-plain.svg) no-repeat;
+	background: url(/dist/svg/loader-plain.svg) no-repeat;
 	background-position: left 5%;
 	background-size: 80% auto;
 	min-height: 100%;
